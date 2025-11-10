@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAGLAOM COMMUNITY RADIO</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: white;
+      text-align: center;
+    }
+
+    .menu-btn {
+      position: absolute;
+      top: 20px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 28px;
+      height: 22px;
+      transition: background 0.3s;
+      z-index: 5;
+    }
+    .menu-btn:hover { background: rgba(255, 255, 255, 0.3); }
+    .menu-btn div { width: 100%; height: 3px; background: white; border-radius: 2px; }
+
+    #contactBtn { left: 20px; }
+    #aboutBtn { right: 20px; }
+
+    .popup {
+      position: absolute;
+      top: 60px;
+      background: rgba(30, 58, 138, 0.95);
+      padding: 10px;
+      border-radius: 10px;
+      width: 180px;
+      color: #e0e7ff;
+      display: none;
+      font-size: 13px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      text-align: left;
+      line-height: 1.5;
+      z-index: 10;
+    }
+    #contactPopup { left: 10px; }
+    #aboutPopup { right: 10px; }
+
+    .logo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-bottom: 10px;
+      margin-top: 60px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      background: white;
+      z-index: 2;
+    }
+    .logo img { width: 100%; height: 100%; object-fit: cover; }
+
+    .station-name {
+      font-size: 22px;
+      font-weight: bold;
+      margin: 3px 0 0 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+    }
+    .tagline {
+      font-size: 14px;
+      color: #e0e7ff;
+      margin-top: 2px;
+      margin-bottom: 20px;
+      font-weight: 300;
+    }
+
+    .soundwave {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      height: 40px;
+      margin-bottom: 20px;
+    }
+    .bar {
+      width: 8px;
+      background: linear-gradient(to top, #60a5fa, #2563eb);
+      border-radius: 4px;
+      animation: wave 1.2s ease-in-out infinite;
+      animation-play-state: paused;
+    }
+    .bar:nth-child(1){animation-delay:0s;height:40%}
+    .bar:nth-child(2){animation-delay:0.1s;height:60%}
+    .bar:nth-child(3){animation-delay:0.2s;height:80%}
+    .bar:nth-child(4){animation-delay:0.3s;height:100%}
+    .bar:nth-child(5){animation-delay:0.4s;height:70%}
+    @keyframes wave {0%,100%{transform:scaleY(1)}50%{transform:scaleY(0.4)}}
+
+    /* ✅ smaller play button */
+    .play-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      color: white;
+      padding: 10px 26px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+      margin-top: 10px;
+      z-index: 2;
+    }
+    .play-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.5);
+    }
+
+    .play-icon {
+      width: 0; height: 0;
+      border-left: 12px solid white;
+      border-top: 7px solid transparent;
+      border-bottom: 7px solid transparent;
+    }
+    .pause-icon {
+      display: flex; gap: 3px;
+    }
+    .pause-icon div {
+      width: 4px; height: 16px;
+      background: white; border-radius: 2px;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 5px;
+      font-size: 12px;
+      color: #cbd5e1;
+      text-align: center;
+    }
+
+    /* Loading spinner */
+    #loading {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 999;
+    }
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #2563eb;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% {transform: rotate(0deg);}
+      100% {transform: rotate(360deg);}
+    }
+    #loading p {
+      margin-top: 15px;
+      font-size: 16px;
+      color: white;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="contactBtn" class="menu-btn"><div></div><div></div><div></div></div>
+  <div id="aboutBtn" class="menu-btn"><div></div><div></div><div></div></div>
+
+  <div id="contactPopup" class="popup">
+    <p>📞 +63 912 913 6490</p>
+    <p>📧 paglaomfm@gmail.com</p>
+    <p>🌐 fb.com/PaglaomCommunityRadio</p>
+  </div>
+  <div id="aboutPopup" class="popup">
+    <p><strong>About:</strong></p>
+    <p>Paglaom Community Radio – sharing the Gospel, uplifting songs, and inspiring community development.</p>
+  </div>
+
+  <div class="logo">
+    <img src="https://i.ibb.co/kgCMb03k/476799871-945299481081090-8046616198485203486-n.jpg" alt="PAGLAOM RADIO">
+  </div>
+
+  <h1 class="station-name">PAGLAOM COMMUNITY RADIO</h1>
+  <p class="tagline">Your Good News Radio</p>
+
+  <div class="soundwave" id="soundwave">
+    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+  </div>
+
+  <button class="play-button" id="playButton">
+    <span id="buttonText">LISTEN LIVE</span>
+    <div id="buttonIcon" class="play-icon"></div>
+  </button>
+
+  <audio id="radioPlayer" preload="none" crossorigin="anonymous"
+         src="http://212.84.160.3:6247/;stream.mp3"></audio>
+
+  <footer>© 2025 Prepared by Renz-kye Amoroto</footer>
+
+  <div id="loading">
+    <div class="spinner"></div>
+    <p>Connecting...</p>
+  </div>
+
+  <script>
+    const player = document.getElementById('radioPlayer');
+    const playButton = document.getElementById('playButton');
+    const buttonText = document.getElementById('buttonText');
+    const buttonIcon = document.getElementById('buttonIcon');
+    const bars = document.querySelectorAll('.bar');
+    const contactBtn = document.getElementById('contactBtn');
+    const aboutBtn = document.getElementById('aboutBtn');
+    const contactPopup = document.getElementById('contactPopup');
+    const aboutPopup = document.getElementById('aboutPopup');
+    const loading = document.getElementById('loading');
+
+    playButton.addEventListener('click', async () => {
+      try {
+        if (player.paused) {
+          loading.style.display = 'flex';
+          await player.play();
+          loading.style.display = 'none';
+          buttonText.textContent = 'PAUSE';
+          buttonIcon.className = 'pause-icon';
+          buttonIcon.innerHTML = '<div></div><div></div>';
+          bars.forEach(bar => bar.style.animationPlayState = 'running');
+        } else {
+          player.pause();
+          buttonText.textContent = 'LISTEN LIVE';
+          buttonIcon.className = 'play-icon';
+          buttonIcon.innerHTML = '';
+          bars.forEach(bar => bar.style.animationPlayState = 'paused');
+        }
+      } catch (e) {
+        loading.style.display = 'none';
+        alert('Stream is temporarily unavailable.');
+        console.error(e);
+      }
+    });
+
+    contactBtn.onclick = () => {
+      contactPopup.style.display = contactPopup.style.display === 'block' ? 'none' : 'block';
+      aboutPopup.style.display = 'none';
+    };
+    aboutBtn.onclick = () => {
+      aboutPopup.style.display = aboutPopup.style.display === 'block' ? 'none' : 'block';
+      contactPopup.style.display = 'none';
+    };
+  </script>
+</body>
+</html>
